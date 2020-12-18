@@ -3,5 +3,5 @@ Rails.application.routes.draw do
   root "dashboard#index"
   get "vendors/all"
   match "vendors/performance/:id" => "vendors#performance", via: [:get]
-  # resources :vendors, defaults: { format: :json }
+  match "vendors/calculate_performance/:id" => "vendors#calculate_performance", via: [:get]
 end
