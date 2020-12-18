@@ -37,6 +37,11 @@ class VendorsController < ApplicationController
     }
   end
 
+  def calculate_performance
+    id = params["id"]
+    debugger
+  end
+
   private
 
   def headers
