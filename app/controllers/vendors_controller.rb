@@ -42,6 +42,40 @@ class VendorsController < ApplicationController
     debugger
   end
 
+  def url_encoder(str)
+    str.gsub(/ /, '%20')
+  end
+
+  def get_hours
+    id = params["id"]
+    
+    vendor = HTTParty.get(
+      "#{ENV["BASE_URL"]}vendors/#{id}",
+      headers: headers 
+    )
+
+    this_vendor = JSON.parse(vendor.body)
+
+    vendor_name = this_vendor["name"]
+    lat = this_vendor["latitude"]
+    lng = this_vendor["longitude"]
+    
+    place_id = HTTParty.get(
+      "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=#{url_encoder(vendor_name)}&inputtype=textquery&locationbias=point:#{lat},#{lng}&key=#{ENV["GOOGLE_API_KEY"]}"
+    )
+
+    place_id_response = JSON.parse(place_id.body)
+    vendor_place_id = place_id_response["candidates"][0]["place_id"]
+
+    details_url = "https://maps.googleapis.com/maps/api/place/details/json?place_id=#{vendor_place_id}&fields=name,opening_hours&key=#{ENV["GOOGLE_API_KEY"]}"
+
+    operating_hours_response = HTTParty.get(details_url)
+    vendor_operating_hours = JSON.parse(operating_hours_response.body)
+
+    render json: vendor_operating_hours
+    
+  end
+
   private
 
   def headers
