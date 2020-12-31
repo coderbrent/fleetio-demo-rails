@@ -6,6 +6,7 @@ class VendorsController < ApplicationController
   def all
     response = HTTParty.get("#{ENV['BASE_URL']}vendors", headers: headers)
 
+    puts ENV['BASE_URL']
     render json: response.body
   end
 
@@ -86,7 +87,7 @@ class VendorsController < ApplicationController
       headers: headers,
       body: { 
         custom_fields: {
-          operating_hours: vendor_operating_hours['result']['opening_hours']['weekday_text']
+          operating_hours: vendor_operating_hours
         }
       }
     )
