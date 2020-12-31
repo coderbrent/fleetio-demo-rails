@@ -1,2 +1,1 @@
-module VendorsHelper
-end
+module VendorsHelper; end
