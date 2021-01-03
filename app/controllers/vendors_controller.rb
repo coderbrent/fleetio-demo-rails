@@ -7,7 +7,8 @@ class VendorsController < ApplicationController
     response = HTTParty.get("#{ENV['BASE_URL']}vendors", headers: headers)
 
     puts ENV['BASE_URL']
-    render json: response.body
+    render component: 'Dashboard', props: { state: response.body }
+
   end
 
   def performance
@@ -40,8 +41,9 @@ class VendorsController < ApplicationController
   end
 
   def calculate_performance
-    id = params['id']
-    debugger
+    service_id = params['id']
+    
+    all_vendor_service_entries = HTTParty.get("#{ENV['BASE_URL']}service_entries/#{service_id}", headers: headers)
   end
 
   def url_encoder(str)
@@ -66,7 +68,7 @@ class VendorsController < ApplicationController
           url_encoder(vendor_name)
         }&inputtype=textquery&locationbias=point:#{lat},#{lng}&key=#{
           ENV['GOOGLE_API_KEY']
-        }"
+        }",
       )
 
     place_id_response = JSON.parse(place_id.body)

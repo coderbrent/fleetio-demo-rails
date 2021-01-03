@@ -1,13 +1,13 @@
-import React from "react"
-import PropTypes from "prop-types"
-class Dashboard extends React.Component {
-  render () {
-    return (
-      <p>
-        { this.props.welcome_msg }
-      </p>
-    );
-  }
+import React, { useState } from "react"
+
+const Dashboard = props => {
+  const [vendors, setVendors] = useState(JSON.parse(props.state[0]));
+
+  return (
+    <div>
+      {vendors}
+    </div>
+  )
 }
 
 export default Dashboard
