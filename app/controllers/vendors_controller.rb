@@ -1,7 +1,7 @@
 class VendorsController < ApplicationController
   include HTTParty
 
-  respond_to :json
+  # respond_to :json
 
   def all
     response = HTTParty.get("#{ENV['BASE_URL']}vendors", headers: headers)
@@ -40,10 +40,31 @@ class VendorsController < ApplicationController
   
   end
 
-  def calculate_performance
-    service_id = params['id']
+  def calculate_hours
+    service_id = params['id'] # our specific service repair id
     
-    all_vendor_service_entries = HTTParty.get("#{ENV['BASE_URL']}service_entries/#{service_id}", headers: headers)
+    service = # our service response from fleetio
+      HTTParty.get(
+        "#{ENV['BASE_URL']}service_entries/#{service_id}", 
+        headers: headers
+      )
+
+    vendor = # the shop that performed the service 
+      HTTParty.get(
+        "#{ENV['BASE_URL']}vendors/#{service['vendor_id']}", headers: headers
+      )
+
+    vendor_res = JSON.parse(vendor.body) # parsed vendor api response
+    shop_schedule = vendor_res['custom_fields']['operating_hours'] # vendors operating schedule
+
+    #the shop_schedule is an array stored as a string on the vendor response.
+    #we need to take the string, convert it to an array.
+
+    formatted_schedule = Hash[shop_schedule.split(',').map {|date| date.split(":", 2).map(&:strip)}]
+
+    render json: formatted_schedule
+    #We are fetching the service id for a given job, and subsequently the vendor (by the service id)
+
   end
 
   def url_encoder(str)
@@ -72,24 +93,24 @@ class VendorsController < ApplicationController
       )
 
     place_id_response = JSON.parse(place_id.body)
+
     #TODO offer user a choice of shops if there are more than one candidate because of location bias
 
     vendor_place_id = place_id_response['candidates'][0]['place_id']
 
-    details_url =
-      "https://maps.googleapis.com/maps/api/place/details/json?place_id=#{
-        vendor_place_id
-      }&fields=name,opening_hours&key=#{ENV['GOOGLE_API_KEY']}"
+    open_hours_response = 
+      HTTParty.get("https://maps.googleapis.com/maps/api/place/details/json?place_id=#{
+      vendor_place_id}&fields=name,opening_hours&key=#{ENV['GOOGLE_API_KEY']}")
 
-    operating_hours_response = HTTParty.get(details_url)
-    vendor_operating_hours = JSON.parse(operating_hours_response.body)
+    vendors_hours = JSON.parse(open_hours_response.body)
+    weekday_text = vendors_hours['result']['opening_hours']['weekday_text']
 
     hour_update = HTTParty.patch(
       "#{ENV['BASE_URL']}vendors/#{id}",
       headers: headers,
       body: { 
         custom_fields: {
-          operating_hours: vendor_operating_hours
+          operating_hours: weekday_text
         }
       }
     )
