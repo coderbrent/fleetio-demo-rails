@@ -68,14 +68,27 @@ class VendorsController < ApplicationController
         }
       ]
 
-      start_time = Time.parse(service['started_at'])
-      end_time = Time.parse(service['completed_at'])
+      def timeDiff(start_time, end_time)
+        Time.parse(end_time) - Time.parse(start_time)
+      end
 
-      duration = end_time.to_i - start_time.to_i
+      started_at = Date.parse(service['started_at'])
+      completed_at = Date.parse(service['completed_at'])
+      total_down_time = (completed_at - started_at)
+     
+      open_hours_start_day_time = 
+        Time.parse(
+          schedule_hash[Date::DAYNAMES[started_at.wday]]
+          .split('–')[0])
 
-      puts duration
+      open_hours_end_day_time = 
+        Time.parse(
+          schedule_hash[Date::DAYNAMES[started_at.wday]]
+          .split('–')[1])
+
+      
     
-    render json: service
+    render json: schedule_hash
     
   end
 
@@ -117,12 +130,14 @@ class VendorsController < ApplicationController
     vendors_hours = JSON.parse(open_hours_response.body)
     weekday_text = vendors_hours['result']['opening_hours']['weekday_text']
 
+    puts weekday_text.join('\n')
+
     hour_update = HTTParty.patch(
       "#{ENV['BASE_URL']}vendors/#{id}",
       headers: headers,
       body: { 
         custom_fields: {
-          operating_hours: weekday_text
+          operating_hours: weekday_text.join('\n')
         }
       }
     )
