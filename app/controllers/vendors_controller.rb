@@ -5,10 +5,7 @@ class VendorsController < ApplicationController
 
   def all
     response = HTTParty.get("#{ENV['BASE_URL']}vendors", headers: headers)
-
-    puts ENV['BASE_URL']
     render component: 'Dashboard', props: { state: response.body }
-
   end
 
   def performance
@@ -56,15 +53,30 @@ class VendorsController < ApplicationController
 
     vendor_res = JSON.parse(vendor.body) # parsed vendor api response
     shop_schedule = vendor_res['custom_fields']['operating_hours'] # vendors operating schedule
-
+      
     #the shop_schedule is an array stored as a string on the vendor response.
-    #we need to take the string, convert it to an array.
+    #we need to take the string and convert it to a hash so we can grab the hour ranges
+    #by their keys(days): ex. Monday => 8:00AM - 8:00PM. we want to be able to determine
+    #how many hours are in the workday ex. 8:00AM - 8:00PM = 12 work hours.
 
-    formatted_schedule = Hash[shop_schedule.split(',').map {|date| date.split(":", 2).map(&:strip)}]
+    schedule_hash = #convert schedule string to a hash
+      Hash[shop_schedule
+        .split('\n')
+        .map { |date| date
+          .split(":", 2)
+          .map(&:strip)
+        }
+      ]
 
-    render json: formatted_schedule
-    #We are fetching the service id for a given job, and subsequently the vendor (by the service id)
+      start_time = Time.parse(service['started_at'])
+      end_time = Time.parse(service['completed_at'])
 
+      duration = end_time.to_i - start_time.to_i
+
+      puts duration
+    
+    render json: service
+    
   end
 
   def url_encoder(str)
@@ -94,7 +106,7 @@ class VendorsController < ApplicationController
 
     place_id_response = JSON.parse(place_id.body)
 
-    #TODO offer user a choice of shops if there are more than one candidate because of location bias
+    #TODO - offer user a choice of shops if there are more than one candidate because of location bias
 
     vendor_place_id = place_id_response['candidates'][0]['place_id']
 
@@ -114,7 +126,6 @@ class VendorsController < ApplicationController
         }
       }
     )
-
     render json: hour_update
   end
 
