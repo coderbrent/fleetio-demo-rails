@@ -54,11 +54,6 @@ class VendorsController < ApplicationController
     vendor_res = JSON.parse(vendor.body) # parsed vendor api response
     shop_schedule = vendor_res['custom_fields']['operating_hours'] # vendors operating schedule
       
-    #the shop_schedule is an array stored as a string on the vendor response.
-    #we need to take the string and convert it to a hash so we can grab the hour ranges
-    #by their keys(days): ex. Monday => 8:00AM - 8:00PM. we want to be able to determine
-    #how many hours are in the workday ex. 8:00AM - 8:00PM = 12 work hours.
-
     schedule_hash = #convert schedule string to a hash
       Hash[shop_schedule
         .split('\n')
@@ -68,25 +63,42 @@ class VendorsController < ApplicationController
         }
       ]
 
-      def timeDiff(start_time, end_time)
-        Time.parse(end_time) - Time.parse(start_time)
-      end
+      started_at = service['started_at'].to_datetime
+      completed_at = service['completed_at'].to_datetime
 
-      started_at = Date.parse(service['started_at'])
-      completed_at = Date.parse(service['completed_at'])
-      total_down_time = (completed_at - started_at)
-     
-      open_hours_start_day_time = 
-        Time.parse(
-          schedule_hash[Date::DAYNAMES[started_at.wday]]
-          .split('–')[0])
+      started_at_day = started_at.strftime("%A")
+      completed_at_day = completed_at.strftime("%A")
 
-      open_hours_end_day_time = 
-        Time.parse(
-          schedule_hash[Date::DAYNAMES[started_at.wday]]
-          .split('–')[1])
-
+      started_at_hours = schedule_hash[started_at_day]
+      completed_at_hours = schedule_hash[completed_at_day]
       
+      total_down_time_hours = ((completed_at.to_time - started_at.to_time) / 1.hour).ceil
+     
+      start_day_open, start_day_close = schedule_hash[Date::DAYNAMES[started_at.wday]]
+        .split('–')
+        .map { |date| DateTime.parse(date) }
+
+      day_downtime_hours = ((start_day_close.to_time - start_day_open.to_time) / 1.hour).ceil
+
+      total_days_down = (0..(started_at..completed_at).count).to_a #2
+  
+      #workable hours shop is open for during repair range - loops through vendor schedule and adds total workable time
+      total_hours_down = total_days_down.map do |day_num| 
+        current_day = started_at + day_num.day 
+        current_week_day = current_day.strftime("%A")
+        current_day_schedule = schedule_hash[current_week_day]
+
+        next if current_day_schedule == "Closed"
+        
+        open_time, close_time = current_day_schedule
+        .split('–')
+        .map { |date| DateTime.parse(date) }
+
+        ((close_time.to_time - open_time.to_time) / 1.hour).ceil
+      end.compact.inject(:+)
+      ##
+
+    debugger
     
     render json: schedule_hash
     
