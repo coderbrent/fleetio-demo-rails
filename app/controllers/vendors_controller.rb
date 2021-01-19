@@ -1,8 +1,6 @@
 class VendorsController < ApplicationController
   include HTTParty
 
-  # respond_to :json
-
   def all
     response = HTTParty.get("#{ENV['BASE_URL']}vendors", headers: headers)
     render component: 'Dashboard', props: { state: response.body }
@@ -98,10 +96,22 @@ class VendorsController < ApplicationController
       end.compact.inject(:+)
       ##
 
-    debugger
+      shop_book_hours = service["custom_fields"]["book_time_hours"]
+
+      job_efficiency_rate = ((Float(shop_book_hours.to_i) / total_hours_down) * 100).ceil
     
-    render json: schedule_hash
-    
+      res = HTTParty.patch(
+        "#{ENV["BASE_URL"]}service_entries/#{service_id}",
+        headers: headers,
+        body: { 
+          completed_at: service["completed_at"],
+          custom_fields: {
+            shop_efficiency_rate: job_efficiency_rate
+          }
+        }
+      )
+      
+    render json: res
   end
 
   def url_encoder(str)
@@ -145,7 +155,7 @@ class VendorsController < ApplicationController
     puts weekday_text.join('\n')
 
     hour_update = HTTParty.patch(
-      "#{ENV['BASE_URL']}vendors/#{id}",
+      "#{ENV["BASE_URL"]}vendors/#{id}",
       headers: headers,
       body: { 
         custom_fields: {

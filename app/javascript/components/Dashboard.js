@@ -5,7 +5,7 @@ const Dashboard = props => {
 
   return (
     <div style={{ backgroundColor: 'rebeccapurple'}}>
-      {props.welcome_msg}
+      {vendors}
     </div>
   )
 }
