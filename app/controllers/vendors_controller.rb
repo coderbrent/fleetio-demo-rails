@@ -6,7 +6,7 @@ class VendorsController < ApplicationController
     render component: 'Dashboard', props: { state: response.body }
   end
 
-  def performance
+  def performance #loops over all vendors service entries, adds all the efficiency rates and determines an average.
     id = params['id']
 
     response =
@@ -35,7 +35,7 @@ class VendorsController < ApplicationController
   
   end
 
-  def calculate_hours
+  def calculate_hours #determines and sets the job efficiency rate for a given service entry
     service_id = params['id'] # our specific service repair id
     
     service = # our service response from fleetio
@@ -44,15 +44,15 @@ class VendorsController < ApplicationController
         headers: headers
       )
 
-    vendor = # the shop that performed the service 
+    vendor =
       HTTParty.get(
         "#{ENV['BASE_URL']}vendors/#{service['vendor_id']}", headers: headers
       )
 
-    vendor_res = JSON.parse(vendor.body) # parsed vendor api response
-    shop_schedule = vendor_res['custom_fields']['operating_hours'] # vendors operating schedule
+    vendor_res = JSON.parse(vendor.body)
+    shop_schedule = vendor_res['custom_fields']['operating_hours']
       
-    schedule_hash = #convert schedule string to a hash
+    schedule_hash = #convert schedule (stored as a string in fleetio custom field) to a hash
       Hash[shop_schedule
         .split('\n')
         .map { |date| date
@@ -61,26 +61,23 @@ class VendorsController < ApplicationController
         }
       ]
 
-      started_at = service['started_at'].to_datetime
+      started_at = service['started_at'].to_datetime #ex output: Mon, 18 Jan 2021 11:47:00 -0500
       completed_at = service['completed_at'].to_datetime
 
-      started_at_day = started_at.strftime("%A")
+      started_at_day = started_at.strftime("%A") #ex output: "Monday"
       completed_at_day = completed_at.strftime("%A")
-
-      started_at_hours = schedule_hash[started_at_day]
-      completed_at_hours = schedule_hash[completed_at_day]
       
-      total_down_time_hours = ((completed_at.to_time - started_at.to_time) / 1.hour).ceil
+      started_at_hours = schedule_hash[started_at_day] #ex output: 8:00 AM – 6:00 PM"
+      completed_at_hours = schedule_hash[completed_at_day]
+      total_down_time_hours = ((completed_at.to_time - started_at.to_time) / 1.hour) #ex output: 0.983333333
      
       start_day_open, start_day_close = schedule_hash[Date::DAYNAMES[started_at.wday]]
         .split('–')
-        .map { |date| DateTime.parse(date) }
+        .map { |date| DateTime.parse(date) } #ex output: Tue, 19 Jan 2021 08:00:00 +0000
 
-      day_downtime_hours = ((start_day_close.to_time - start_day_open.to_time) / 1.hour).ceil
-
-      total_days_down = (0..(started_at..completed_at).count).to_a #2
+      total_days_down = (1..(started_at..completed_at).count).to_a #ex output: [1]
   
-      #workable hours shop is open for during repair range - loops through vendor schedule and adds total workable time
+      #loops over vendor schedule and sums up total shop availability time 
       total_hours_down = total_days_down.map do |day_num| 
         current_day = started_at + day_num.day 
         current_week_day = current_day.strftime("%A")
@@ -92,13 +89,26 @@ class VendorsController < ApplicationController
         .split('–')
         .map { |date| DateTime.parse(date) }
 
-        ((close_time.to_time - open_time.to_time) / 1.hour).ceil
-      end.compact.inject(:+)
-      ##
+        if total_days_down.count > 1
+          ((close_time.to_time - open_time.to_time) / 1.hour).ceil
+        else
+          ((close_time.to_time - open_time.to_time) / 1.day).ceil
+        end
+      end.compact.inject(:+) #ex output: 1
 
-      shop_book_hours = service["custom_fields"]["book_time_hours"]
+      shop_book_hours = Float(service["custom_fields"]["book_time_hours"])
+      
+      # job_efficiency_rate = ((Float(shop_book_hours.to_i) / Float(total_hours_down)))
 
-      job_efficiency_rate = ((Float(shop_book_hours.to_i) / total_hours_down) * 100).ceil
+      if shop_book_hours.to_i < total_hours_down #if it took less time to complete than the book hours time
+        job_efficiency_rate = ((Float(shop_book_hours.to_i) / Float(total_hours_down))) * 100
+      else
+        job_efficiency_rate = ((Float(total_hours_down) / Float(shop_book_hours.to_i))) * 100
+      end
+
+      if shop_book_hours.to_i === total_hours_down
+        job_efficiency_rate = Float(100)
+      end
     
       res = HTTParty.patch(
         "#{ENV["BASE_URL"]}service_entries/#{service_id}",
@@ -106,11 +116,11 @@ class VendorsController < ApplicationController
         body: { 
           completed_at: service["completed_at"],
           custom_fields: {
-            shop_efficiency_rate: job_efficiency_rate
+            shop_efficiency_rate: job_efficiency_rate.floor
           }
         }
       )
-      
+      debugger
     render json: res
   end
 

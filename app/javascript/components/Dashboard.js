@@ -1,11 +1,10 @@
-import React, { useState } from "react"
+import React, { useState } from "react";
+import ReportCard from '../components/ReportCard';
 
 const Dashboard = props => {
-  const [vendors, setVendors] = useState(props.welcome_msg);
-
   return (
-    <div style={{ backgroundColor: 'rebeccapurple'}}>
-      {vendors}
+    <div>
+      {/* <ReportCard shopName={props.shopName} letterGrade={} averages={} /> */}
     </div>
   )
 }

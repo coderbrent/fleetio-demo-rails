@@ -1,6 +1,6 @@
-import React from "react"
+import React from "react";
 
-const ShopPerformanceCard = ({ shopName, letterGrade, averages }) => {
+const ReportCard = ({ shopName, letterGrade, averages }) => {
   return (
   <>
     <div className="w-full max-w-md bg-white shadow m-4 p-4">
@@ -37,4 +37,4 @@ const ShopPerformanceCard = ({ shopName, letterGrade, averages }) => {
   </>
 )};
 
-export default ShopPerformanceCard;
+export default ReportCard;
