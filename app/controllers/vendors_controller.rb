@@ -98,11 +98,9 @@ class VendorsController < ApplicationController
 
       shop_book_hours = Float(service["custom_fields"]["book_time_hours"])
       
-      # job_efficiency_rate = ((Float(shop_book_hours.to_i) / Float(total_hours_down)))
-
       if shop_book_hours.to_i < total_hours_down #if it took less time to complete than the book hours time
         job_efficiency_rate = ((Float(shop_book_hours.to_i) / Float(total_hours_down))) * 100
-      else
+      else #otherwise, we reverse the equation so we're not getting funky numbers
         job_efficiency_rate = ((Float(total_hours_down) / Float(shop_book_hours.to_i))) * 100
       end
 
@@ -120,7 +118,6 @@ class VendorsController < ApplicationController
           }
         }
       )
-      debugger
     render json: res
   end
 

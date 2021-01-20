@@ -1,5 +1,30 @@
 import React from "react";
 
+const gradeColorizer = grade => {
+  switch(grade) {
+    case 'A': return 'text-green-500 text-6xl';
+    case 'B': return 'text-blue-500 text-6xl';
+    case 'C': return 'text-yellow-500 text-6xl';
+    case 'D': return 'text-pink-500 text-6xl';
+    case 'F': return 'text-red-500 text-6xl';
+    default: return null;
+  }
+};
+
+const grader = grade => {
+  if(grade <= 20) { 
+    return 'F'
+  } else if(grade <= 30) {
+    return 'D'
+  } else if(grade <= 40) {
+    return 'C'
+  } else if (grade <= 50) {
+    return 'B'
+  } else if (grade > 60) {
+    return 'A'
+  }
+};
+
 const ReportCard = ({ shopName, letterGrade, averages }) => {
   return (
   <>
