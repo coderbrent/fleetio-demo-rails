@@ -36,7 +36,7 @@ const ReportCard = ({ shopName, letterGrade, averages }) => {
           href="https://fleetio-demo.herokuapp.com"
           className="text-sm text-blue-400"
         >
-          Details >
+          Details
         </a>
       </div>
       <div className="">

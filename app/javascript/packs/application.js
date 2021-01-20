@@ -7,7 +7,7 @@ import Rails from "@rails/ujs"
 import Turbolinks from "turbolinks"
 import * as ActiveStorage from "@rails/activestorage"
 import "channels"
-import "stylesheets/application"
+import "/Users/brentabruzese/Desktop/projects/fleetio-demo-rails/app/javascript/stylesheets/application.scss"
 
 Rails.start()
 Turbolinks.start()

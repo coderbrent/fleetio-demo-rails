@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import ReportCard from '../components/ReportCard';
 
 const averages = {
   down_time: '10 days',
@@ -25,7 +26,6 @@ function Dashboard() {
   return (
     <>    
     <div className="App flex flex-col flex-wrap items-center justify-center bg-gray-100">
-    <Docs />
     <div className="container auto-mx">
     <select onChange={e => getShopPerformanceCard(e.target.value)}>
         { vendors.map(shop => (
@@ -38,7 +38,7 @@ function Dashboard() {
     </select>
     </div>
     { score ? score.map(el => (
-        <ShopPerformanceCard
+        <ReportCard
           key={el.id}
           shopName={el.name}
           averages={averages}
