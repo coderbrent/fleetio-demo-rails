@@ -31,7 +31,7 @@ class VendorsController < ApplicationController
   
   end
 
-  def calculate_hours #determines and sets the job efficiency rate for a given service entry
+  def calculate_hours #service entry - determines and sets the job efficiency rate for a given service entry
     service_id = params['id'] # our specific service repair id
     
     service = # our service response from fleetio
