@@ -3,7 +3,7 @@ class VendorsController < ApplicationController
 
   def all
     response = HTTParty.get("#{ENV['BASE_URL']}vendors", headers: headers)
-    render component: 'Dashboard', props: { state: response.body }
+    render json: response.body
   end
 
   def performance #loops over all vendors service entries, adds all the efficiency rates and determines an average.
@@ -27,11 +27,7 @@ class VendorsController < ApplicationController
         .map(&:to_i)
         .inject(0) { |sum, x| sum + x } / all_service_entries_by_vendor.length
 
-    render json: {
-      name: all_service_entries_by_vendor.first['vendor_name'],
-      id: id,
-      average: overall_avg_efficiency
-    }
+    render json: { name: all_service_entries_by_vendor.first['vendor_name'], id: id, average: overall_avg_efficiency }
   
   end
 

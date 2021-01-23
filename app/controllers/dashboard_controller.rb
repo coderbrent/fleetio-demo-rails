@@ -1,5 +1,5 @@
 class DashboardController < ApplicationController
   def index
-    render component: 'Dashboard', props: { welcome_msg: 'Ok!' }
+    render component: 'Dashboard'
   end
 end
