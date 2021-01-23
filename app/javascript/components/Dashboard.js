@@ -25,8 +25,6 @@ function Dashboard(props) {
   const [score, setScore] = useState([]);
   const [vendors, setVendors] = useState([]);
 
-  console.log(props.state)
-
   const getShopPerformanceCard = shopID => {
     fetch(`http://localhost:3000/vendors/performance/${shopID}`)
       .then(res => res.json())
