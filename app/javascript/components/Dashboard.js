@@ -16,12 +16,12 @@ const grader = grade => {
     return 'C'
   } else if (grade <= 50) {
     return 'B'
-  } else if (grade > 60) {
+  } else if (grade >= 60) {
     return 'A'
   }
 };
 
-function Dashboard(props) {
+function Dashboard() {
   const [score, setScore] = useState([]);
   const [vendors, setVendors] = useState([]);
 
