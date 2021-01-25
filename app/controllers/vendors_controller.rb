@@ -144,7 +144,7 @@ class VendorsController < ApplicationController
 
     place_id_response = JSON.parse(place_id.body)
 
-    #TODO - offer user a choice of shops if there are more than one candidate because of location bias
+    #TODO - offer user a choice of shops if there are more than one candidate from location bias
 
     vendor_place_id = place_id_response['candidates'][0]['place_id']
 
