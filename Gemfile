@@ -54,5 +54,3 @@ gem "react-rails", "~> 2.6"
 gem "httparty", "~> 0.18.1"
 
 gem "responders", "~> 3.0"
-
-gem 'prettier'
