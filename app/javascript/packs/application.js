@@ -9,7 +9,7 @@ import * as ActiveStorage from "@rails/activestorage"
 import "channels"
 // import "app/javascript/stylesheets/application.scss"
 
-Rails.start();
+Rails.start()
 Turbolinks.start()
 ActiveStorage.start()
 // Support component names relative to this directory:
