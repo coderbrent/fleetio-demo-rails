@@ -204,6 +204,7 @@ PLATFORMS
 
 DEPENDENCIES
   bootsnap (>= 1.4.4)
+  bundler (~> 2.1, >= 2.1.4)
   byebug
   figaro (~> 1.2)
   httparty (~> 0.18.1)
