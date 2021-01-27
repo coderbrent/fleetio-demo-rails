@@ -26,7 +26,7 @@ function Dashboard() {
   const [vendors, setVendors] = useState([]);
 
   const getShopPerformanceCard = shopID => {
-    fetch(`http://localhost:3000/vendors/performance/${shopID}`)
+    fetch(`/vendors/performance/${shopID}`)
       .then(res => res.json())
       .then(data => { 
         setScore([data])
@@ -34,7 +34,7 @@ function Dashboard() {
   };
 
   useEffect(() => {
-    fetch(`http://localhost:3000/vendors/all`)
+    fetch(`/vendors/all`)
       .then(res => res.json())
       .then(data => { 
         setVendors(data) 
