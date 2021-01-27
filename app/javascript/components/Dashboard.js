@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ReportCard from "../components/ReportCard";
-import { Docs } from '../components/Docs';
+import Layout from "./Layout";
 
 const averages = {
   down_time: "10 days",
@@ -44,30 +44,31 @@ function Dashboard() {
 
   return (
     <>
-    <Docs />
-      <div className="App flex flex-col flex-wrap items-center justify-center bg-gray-100">
-        <div className="container auto-mx">
-          <select onChange={e => getShopPerformanceCard(e.target.value)}>
-            {vendors.map(vendor => (
-              <option value={vendor.id} key={vendor.id}>
-                {vendor.name}
-              </option>
-            ))}
-          </select>
+    <Layout>
+        <div className="App flex flex-col flex-wrap items-center justify-center bg-gray-100">
+          <div className="container auto-mx">
+            <select onChange={e => getShopPerformanceCard(e.target.value)}>
+              {vendors.map(vendor => (
+                <option value={vendor.id} key={vendor.id}>
+                  {vendor.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+          {score
+            ? score.map(el => (
+                <ReportCard
+                  key={el.id}
+                  shopName={el.name}
+                  averages={averages}
+                  letterGrade={grader(el.average)}
+                />
+              ))
+            : null}
+          </div>
         </div>
-        <div>
-        {score
-          ? score.map(el => (
-              <ReportCard
-                key={el.id}
-                shopName={el.name}
-                averages={averages}
-                letterGrade={grader(el.average)}
-              />
-            ))
-          : null}
-        </div>
-      </div>
+      </Layout>
     </>
   );
 }

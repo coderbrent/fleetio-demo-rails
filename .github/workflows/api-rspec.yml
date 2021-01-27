@@ -1,0 +1,9 @@
+name: CI Rspec Tests
+
+on: [push, pull_request]
+  push:
+    paths:
+    - 'api/**'
+  pull_request:
+    paths:
+    - 'api/**'
