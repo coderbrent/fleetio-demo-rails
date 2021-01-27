@@ -2,7 +2,10 @@ class VendorsController < ApplicationController
   include HTTParty
 
   def all
-    response = HTTParty.get("#{ENV['BASE_URL']}vendors", headers: headers)
+    response = HTTParty.get("#{ENV['BASE_URL']}vendors", headers: {
+      'Authorization' => "Token token=#{ENV['FLEETIO_API_KEY']}",
+      'Account-Token' => ENV['FLEETIO_TOKEN']
+    })
     render json: response.body
   end
 
@@ -12,7 +15,10 @@ class VendorsController < ApplicationController
     response =
       HTTParty.get(
         "#{ENV['BASE_URL']}service_entries?q[vendor_id_eq]=#{id}",
-        headers: headers
+        headers: {
+          'Authorization' => "Token token=#{ENV['FLEETIO_API_KEY']}",
+          'Account-Token' => ENV['FLEETIO_TOKEN']
+        }
       )
 
     all_service_entries_by_vendor = JSON.parse(response.body)
@@ -37,12 +43,18 @@ class VendorsController < ApplicationController
     service = # our service response from fleetio
       HTTParty.get(
         "#{ENV['BASE_URL']}service_entries/#{service_id}", 
-        headers: headers
+        headers: {
+          'Authorization' => "Token token=#{ENV['FLEETIO_API_KEY']}",
+          'Account-Token' => ENV['FLEETIO_TOKEN']
+        }
       )
 
     vendor =
       HTTParty.get(
-        "#{ENV['BASE_URL']}vendors/#{service['vendor_id']}", headers: headers
+        "#{ENV['BASE_URL']}vendors/#{service['vendor_id']}", headers: {
+          'Authorization' => "Token token=#{ENV['FLEETIO_API_KEY']}",
+          'Account-Token' => ENV['FLEETIO_TOKEN']
+        }
       )
 
     vendor_res = JSON.parse(vendor.body)
@@ -106,7 +118,10 @@ class VendorsController < ApplicationController
     
       res = HTTParty.patch(
         "#{ENV["BASE_URL"]}service_entries/#{service_id}",
-        headers: headers,
+        headers: {
+          'Authorization' => "Token token=#{ENV['FLEETIO_API_KEY']}",
+          'Account-Token' => ENV['FLEETIO_TOKEN']
+        },
         body: { 
           completed_at: service["completed_at"],
           custom_fields: {
@@ -125,7 +140,10 @@ class VendorsController < ApplicationController
   def get_hours
     id = params['id']
 
-    vendor = HTTParty.get("#{ENV['BASE_URL']}vendors/#{id}", headers: headers)
+    vendor = HTTParty.get("#{ENV['BASE_URL']}vendors/#{id}", headers: {
+      'Authorization' => "Token token=#{ENV['FLEETIO_API_KEY']}",
+      'Account-Token' => ENV['FLEETIO_TOKEN']
+    })
 
     this_vendor = JSON.parse(vendor.body)
 
@@ -159,7 +177,10 @@ class VendorsController < ApplicationController
 
     hour_update = HTTParty.patch(
       "#{ENV["BASE_URL"]}vendors/#{id}",
-      headers: headers,
+      headers: {
+        'Authorization' => "Token token=#{ENV['FLEETIO_API_KEY']}",
+        'Account-Token' => ENV['FLEETIO_TOKEN']
+      },
       body: { 
         custom_fields: {
           operating_hours: weekday_text.join('\n')
@@ -168,13 +189,5 @@ class VendorsController < ApplicationController
     )
     render json: hour_update
   end
-
-  private
-
-  def headers
-    {
-      'Authorization' => "Token token=#{ENV['FLEETIO_API_KEY']}",
-      'Account-Token' => ENV['FLEETIO_TOKEN']
-    }
-  end
+  
 end
