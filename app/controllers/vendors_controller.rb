@@ -23,11 +23,13 @@ class VendorsController < ApplicationController
 
     all_service_entries_by_vendor = JSON.parse(response.body)
 
+    #grabs all efficiency rates (numbers) as an array
     all_efficiency_rates =
       all_service_entries_by_vendor.map do |service_entry|
         service_entry['custom_fields']['shop_efficiency_rate']
       end.compact
 
+    #maps over vendors service entries and averages out the efficiency rates of each.
     overall_avg_efficiency =
       all_efficiency_rates
         .map(&:to_i)
@@ -83,7 +85,7 @@ class VendorsController < ApplicationController
         .split('–')
         .map { |date| DateTime.parse(date) } #ex output: Tue, 19 Jan 2021 08:00:00 +0000
 
-      total_days_down = (1..(started_at..completed_at).count).to_a #ex output: [1]
+      total_days_down = (1..(started_at..completed_at).count).to_a #ex output: [1...or more]
   
       #loops over vendor schedule and sums up total shop availability time 
       total_hours_down = total_days_down.map do |day_num| 
@@ -136,7 +138,7 @@ class VendorsController < ApplicationController
     str.gsub(/ /, '%20')
   end
 
-  #ROUTE - uses Google Places API to fetch shops hours based on stored address (name, lat, lng)
+  #uses Google Places API to fetch shops hours based on stored address (name, lat, lng)
   def get_hours
     id = params['id']
 

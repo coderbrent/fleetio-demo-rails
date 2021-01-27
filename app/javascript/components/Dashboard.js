@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ReportCard from "../components/ReportCard";
+import { Docs } from '../components/Docs';
 
 const averages = {
   down_time: "10 days",
@@ -43,6 +44,7 @@ function Dashboard() {
 
   return (
     <>
+    <Docs />
       <div className="App flex flex-col flex-wrap items-center justify-center bg-gray-100">
         <div className="container auto-mx">
           <select onChange={e => getShopPerformanceCard(e.target.value)}>
@@ -53,6 +55,7 @@ function Dashboard() {
             ))}
           </select>
         </div>
+        <div>
         {score
           ? score.map(el => (
               <ReportCard
@@ -63,6 +66,7 @@ function Dashboard() {
               />
             ))
           : null}
+        </div>
       </div>
     </>
   );
