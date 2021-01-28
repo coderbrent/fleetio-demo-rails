@@ -30,7 +30,12 @@ export default function Layout({ children }) {
     <section className="mt-4 container mx-auto">
     <div className="mt-4 mb-2">
       <h1 className="text-xl font-bold">How it works 🔨</h1>
-      <p className="mt-4 mb-2 font-light">
+        <p>Using...</p>
+        <li>rails 6</li>
+        <li>rails-react</li>
+        <li>rspec</li>
+        <li>sinatra</li>
+      <p className="mt-4 mb-2 font-light" aria-details>
         The Vendor Report Card averages out a service locations (RoE%) rate of efficiency by
         comparing the time a vehicle spent in the shop during open working hours versus the manufacturers suggested book hours for a given repair.
         It then renders a "Report Card" component that displays a letter grade ranging from A - F (A being a score of 60 or better).
@@ -38,7 +43,7 @@ export default function Layout({ children }) {
       </p>
       <div className="mt-4 font-light">
         <h2 className="text-xl font-bold mb-2">The Data Points 📊</h2>
-        <a href="https://github.com/coderbrent/fleetio-demo-rails/blob/189a5831cc81461229a628a4d3133401d5dfd81d/app/controllers/vendors_controller.rb#L142">
+        <a title="link to source for this feature" href="https://github.com/coderbrent/fleetio-demo-rails/blob/189a5831cc81461229a628a4d3133401d5dfd81d/app/controllers/vendors_controller.rb#L142">
         <div className="mb-4 rounded-r-lg bg-green-500 text-white p-4">
           <h4 className="text-lg font-bold">Shop Hours</h4>
           <p className="mt-2 mb-2 font-light">
@@ -63,14 +68,14 @@ export default function Layout({ children }) {
             </p>
         </div>
         </a>
-        <a href="https://github.com/coderbrent/fleetio-demo-rails/blob/189a5831cc81461229a628a4d3133401d5dfd81d/app/controllers/vendors_controller.rb#L12">
+        <a title="link to source for this feature" href="https://github.com/coderbrent/fleetio-demo-rails/blob/189a5831cc81461229a628a4d3133401d5dfd81d/app/controllers/vendors_controller.rb#L12">
           <div className="mb-4 rounded-r-lg bg-blue-500 text-white p-4">
             <h4 className="text-lg font-bold">Book Hours</h4>
               <p>The service entries manufacturers suggested book time (manually input dummy data for now, but it looks like the Motor Driven API has manufacturer suggested book times).</p>
               <p>The book hours for a given service are calculated in the overall performance assessment.</p>
           </div>
         </a>
-        <a href="https://github.com/coderbrent/fleetio-demo-rails/blob/189a5831cc81461229a628a4d3133401d5dfd81d/app/controllers/vendors_controller.rb#L42">
+        <a title="link to source for this feature" href="https://github.com/coderbrent/fleetio-demo-rails/blob/189a5831cc81461229a628a4d3133401d5dfd81d/app/controllers/vendors_controller.rb#L42">
           <div className="mb-4 rounded-r-lg bg-purple-500 text-white p-4">
             <h4 className="text-lg font-bold">Repair Time</h4>
               <p>
