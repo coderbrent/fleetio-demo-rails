@@ -6,7 +6,7 @@ export default function Layout({ children }) {
     <>
     <section className="container mx-auto px-4">
     <div className="mt-4 mb-2">
-      <h1 className="text-3xl font-black">Hi, Senthil!</h1>
+      <h1 className="text-3xl font-black">fleetio-ruby-demo</h1>
       <p className="mt-4 mb-2 font-light">
         I hope you are doing well! 🙂
         After our last conversation, I made the decision to pick up Rails so as to make a stronger case for myself
@@ -38,36 +38,53 @@ export default function Layout({ children }) {
       </p>
       <div className="mt-4 font-light">
         <h2 className="text-xl font-bold mb-2">The Data Points 📊</h2>
+        <a href="https://github.com/coderbrent/fleetio-demo-rails/blob/189a5831cc81461229a628a4d3133401d5dfd81d/app/controllers/vendors_controller.rb#L142">
         <div className="mb-4 rounded-r-lg bg-green-500 text-white p-4">
-          <h4 className="text-lg font-bold">Shop Hours: </h4>
+          <h4 className="text-lg font-bold">Shop Hours</h4>
           <p className="mt-2 mb-2 font-light">
             The shops hours are crucial to determining an accurate efficiency rate 
             because any gauge of a shops output must consider the time
             they are available to work on your vehicles. There were two ways to obtain and store a shops schedule:
           </p>
-            <li>
+            <li className="italic">
               Manual input from the user in the Fleetio UI.
             </li>
-            <li>
+            <li className="italic">
               Sourced from an external API (what I did in this demo with the Google Places API).
             </li>
             <p className="mt-2 mb-2">
-            This feature leverages the Google Places API to determine a shops hours and makes a PATCH request to
-            its vendor profiles "shop_hours" custom field (stores as a string).
+            This feature uses the Google Places API to request a shops hours and subsequently makes a PATCH request to
+            the vendor profiles "shop_hours" custom field (stores as a string). Using custom fields was necessary for this demo
+            project as most of the data points are not a part of the Fleetio API.
           </p>
             <p className="p-4 font-bold ">
             👉 In the future, I thought a nice additional feature would be to check whether a schedule exists online for the shop,
               and if it does not, provide a modal for the user to set the schedule manually.
             </p>
         </div>
-        <div className="mb-4 rounded-r-lg bg-blue-500 text-white p-4">
-          <h4 className="text-lg font-bold">Book Hours:</h4>
-          <p>The service entries manufacturers suggested book time (manually input dummy data for now, but it looks like the Motor Driven API has manufacturer suggested book times)</p>
-        </div> 
-        <div className="mb-4 rounded-r-lg bg-purple-500 text-white p-4">
-          <h4 className="text-lg font-bold">Repair Time:</h4>
-          <p>The total time (less the non-workable off hours) that the shop had the vehicle in service.</p>
-        </div> 
+        </a>
+        <a href="https://github.com/coderbrent/fleetio-demo-rails/blob/189a5831cc81461229a628a4d3133401d5dfd81d/app/controllers/vendors_controller.rb#L12">
+          <div className="mb-4 rounded-r-lg bg-blue-500 text-white p-4">
+            <h4 className="text-lg font-bold">Book Hours</h4>
+              <p>The service entries manufacturers suggested book time (manually input dummy data for now, but it looks like the Motor Driven API has manufacturer suggested book times).</p>
+              <p>The book hours for a given service are calculated in the overall performance assessment.</p>
+          </div>
+        </a>
+        <a href="https://github.com/coderbrent/fleetio-demo-rails/blob/189a5831cc81461229a628a4d3133401d5dfd81d/app/controllers/vendors_controller.rb#L42">
+          <div className="mb-4 rounded-r-lg bg-purple-500 text-white p-4">
+            <h4 className="text-lg font-bold">Repair Time</h4>
+              <p>
+                There's really no way to determine exactly how much time a shop is <span className="italic">actually</span> spending repairing your vehicle. 
+                So I felt the next closest thing would be to determine the <span className="font-bold">potential time</span>. In other words, how long they're open while they have the vehicle.
+            </p>
+          </div> 
+        </a>
+        <p>
+          While admittedly all of this is a bit imperative, I was of course limited to working with custom fields only! Ideally,
+          performance and time calculations would be performed programatically with the appropriate API integrations, leaving the only
+          "manual" effort to capturing a shops open hours. I do hope you enjoyed checking out the feature and if you have any questions
+          about it, please let me know!! 🙂
+        </p>
       </div>
     </div>
     </section>
