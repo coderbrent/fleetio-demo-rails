@@ -85,7 +85,7 @@ export default function Layout({ children }) {
           </div> 
         </a>
         <h1 className="text-xl font-bold">Summary</h1>
-        <p className="pr-4 pb-4 pt-4">
+        <p className="pr-4 pb-4">
           While admittedly all of this is a bit imperative, I was of course limited to working with custom fields only! Ideally,
           performance and time calculations would be performed programatically with the appropriate API integrations, leaving the only
           "manual" effort to capturing a shops open hours. I do hope you enjoyed checking out the feature and if you have any questions
