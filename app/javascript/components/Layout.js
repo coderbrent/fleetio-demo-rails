@@ -8,11 +8,7 @@ export default function Layout({ children }) {
     <div className="mt-4 mb-2">
       <h1 className="text-3xl font-black">fleetio-ruby-demo</h1>
       <p className="mt-4 mb-2 font-light">
-        I hope you are doing well! 🙂
-        After our last conversation, I made the decision to pick up Rails so as to make a stronger case for myself
-        becoming a developer on the Fleetio team. My goal was to learn enough to port my original Node/React project to a Rails/React project.
-        So during my free time over the last few weeks I began studying Rails and I've now completed the port!
-        I've kept the original overview of the feature below.
+        This feature gauges the performance of a shop by determining the rate of efficiency that they operate on your vehicles at.
       </p>
       <h1 className="text-xl font-bold">About the feature</h1>
       <p className="mt-2 font-light">
