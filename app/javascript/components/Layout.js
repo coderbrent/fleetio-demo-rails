@@ -30,7 +30,6 @@ export default function Layout({ children }) {
         <li>rails 6</li>
         <li>rails-react</li>
         <li>rspec</li>
-        <li>sinatra</li>
       <p className="mt-4 mb-2 font-light" aria-details>
         The Vendor Report Card averages out a service locations (RoE%) rate of efficiency by
         comparing the time a vehicle spent in the shop during open working hours versus the manufacturers suggested book hours for a given repair.
